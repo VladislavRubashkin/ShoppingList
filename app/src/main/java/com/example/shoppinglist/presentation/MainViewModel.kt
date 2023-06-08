@@ -35,20 +35,15 @@ class MainViewModel: ViewModel() {
         Работаем через MutableLiveData, из activity подписываемся на эту LiveData.
         ВАЖНО: setValue(или просто value) - можно вызывать только из главного потока, postValue - из любого потока.
      */
-    val shopList = MutableLiveData<List<ShopItem>>()
-
-    fun getShopList(){
-        shopList.value = getShopListUseCase.getShopList()
-    }
+    val shopList = getShopListUseCase.getShopList()
 
     fun deleteShopItem(shopItem: ShopItem){
         deleteShopItemUseCase.deleteShopItem(shopItem)
-        getShopList()
+
     }
 
     fun changeEnableState(shopItem: ShopItem){
         val newShopItem = shopItem.copy(enabled = !shopItem.enabled)
         editShopItemUseCase.editShopItem(newShopItem)
-        getShopList()
     }
 }

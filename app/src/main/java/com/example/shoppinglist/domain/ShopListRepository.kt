@@ -1,5 +1,8 @@
 package com.example.shoppinglist.domain
 
+import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
+
 /**
     TODO #2
 
@@ -19,5 +22,5 @@ interface ShopListRepository {
 
     fun getShopItem(shopItemId: Int): ShopItem
 
-    fun getShopList() : List<ShopItem>
+    fun getShopList() : LiveData<List<ShopItem>>
 }

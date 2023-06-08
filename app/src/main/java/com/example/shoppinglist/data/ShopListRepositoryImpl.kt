@@ -1,7 +1,11 @@
 package com.example.shoppinglist.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.shoppinglist.domain.ShopItem
 import com.example.shoppinglist.domain.ShopListRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 
 /**
 TODO#3
@@ -19,6 +23,7 @@ object ShopListRepositoryImpl : ShopListRepository {
 
     private val shopList = mutableListOf<ShopItem>()
     private var autoIncrementId = 0
+    private val shopListLiveData = MutableLiveData<List<ShopItem>>()
 
     init {
         for (i in 0 until 10){
@@ -33,16 +38,25 @@ object ShopListRepositoryImpl : ShopListRepository {
     При добавлении элемента в коллекцию назначаем ему id(условно самоинкрементирующийся).
     Проверяем был ли уже установлен элементу id и если не был устанавливаем(необходимо для того чтобы при
     редактировании элемента, ему не назначалось новое id.
+     Обновляем MutableLiveData<List<ShopItem>>().
      */
     override fun addShopItem(shopItem: ShopItem) {
         if (shopItem.id == ShopItem.UNDEFINED_ID) {
             shopItem.id = autoIncrementId++
         }
         shopList.add(shopItem)
+        updateList()
     }
 
+    /**
+    TODO#3.6
+
+    Удаляем элемент из листа.
+    Обновляем MutableLiveData<List<ShopItem>>.
+     */
     override fun deleteShopItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
+        updateList()
     }
 
     /**
@@ -69,13 +83,23 @@ object ShopListRepositoryImpl : ShopListRepository {
     }
 
     /**
+    TODO#3.5
+
+    Возвращаем MutableLiveData<List<ShopItem>>.
+     */
+    override fun getShopList(): LiveData<List<ShopItem>> {
+        return shopListLiveData
+    }
+
+    /**
     TODO#3.1
 
+    Кладём в MutableLiveData<List<ShopItem>> лист с ShopItem.
     Возвращать саму коллекцию неправильно так как мы сможем из других мест программы добавлять элементы в коллекцию
     или удалять их. Лучше вернуть копию этой коллекции.
      */
-    override fun getShopList(): List<ShopItem> {
-        return shopList.toList()
+    private fun updateList(){
+        shopListLiveData.value = shopList.toList()
     }
 
 }

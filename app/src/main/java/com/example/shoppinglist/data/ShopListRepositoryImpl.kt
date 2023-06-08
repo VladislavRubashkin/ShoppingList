@@ -6,13 +6,13 @@ import com.example.shoppinglist.domain.ShopListRepository
 /**
 TODO#3
 
-Data-слой - работа с данными
+    Data-слой - работа с данными
 
-Data-слой предоставляет конкретную реализацию репозиторию.
-Data-слой зависит от domain-слоя и знает о нём всё, НО НЕ НАОБОРОТ
+    Data-слой предоставляет конкретную реализацию репозиторию.
+    Data-слой зависит от domain-слоя и знает о нём всё, НО НЕ НАОБОРОТ
 
-Класс делается object(так как он Singleton) - это нужно чтобы не получилось что на одном экране мы работаем с одним
-репозиторием, а на другом экране с другим репозиторием.
+    Класс делается object(так как он Singleton) - это нужно чтобы не получилось что на одном экране мы работаем с одним
+    репозиторием, а на другом экране с другим репозиторием.
  */
 
 object ShopListRepositoryImpl : ShopListRepository {
@@ -20,13 +20,19 @@ object ShopListRepositoryImpl : ShopListRepository {
     private val shopList = mutableListOf<ShopItem>()
     private var autoIncrementId = 0
 
+    init {
+        for (i in 0 until 10){
+            val item = ShopItem("Name $i", i.toDouble(),true)
+            addShopItem(item)
+        }
+    }
+
     /**
     TODO#3.4
 
     При добавлении элемента в коллекцию назначаем ему id(условно самоинкрементирующийся).
     Проверяем был ли уже установлен элементу id и если не был устанавливаем(необходимо для того чтобы при
     редактировании элемента, ему не назначалось новое id.
-
      */
     override fun addShopItem(shopItem: ShopItem) {
         if (shopItem.id == ShopItem.UNDEFINED_ID) {

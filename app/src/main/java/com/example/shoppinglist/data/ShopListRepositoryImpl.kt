@@ -6,6 +6,7 @@ import com.example.shoppinglist.domain.ShopItem
 import com.example.shoppinglist.domain.ShopListRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlin.random.Random
 
 /**
 TODO#3
@@ -34,7 +35,7 @@ object ShopListRepositoryImpl : ShopListRepository {
 
     init {
         for (i in 0 until 100){
-            val item = ShopItem("Name $i", i.toDouble(),true)
+            val item = ShopItem("Name $i", i.toDouble(), Random.nextBoolean())
             addShopItem(item)
         }
     }

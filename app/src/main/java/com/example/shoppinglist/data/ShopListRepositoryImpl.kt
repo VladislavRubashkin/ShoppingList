@@ -21,12 +21,19 @@ TODO#3
 
 object ShopListRepositoryImpl : ShopListRepository {
 
-    private val shopList = mutableListOf<ShopItem>()
+    /**
+        TODO #5
+
+        Меняем реализацию с mutableListOf() на sortedSetOf() и в конструктор передаём Comparator, для того чтобы
+        при смене состояния элемента он не уходил в конец(поскольку в методе editShopItem() мы удаляем старый
+        элемент и добавляем новый) , а сортировался по id.
+     */
+    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id)})
     private var autoIncrementId = 0
     private val shopListLiveData = MutableLiveData<List<ShopItem>>()
 
     init {
-        for (i in 0 until 10){
+        for (i in 0 until 100){
             val item = ShopItem("Name $i", i.toDouble(),true)
             addShopItem(item)
         }

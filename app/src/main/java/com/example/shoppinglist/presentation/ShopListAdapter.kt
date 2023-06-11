@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.ShopItem
@@ -13,10 +14,23 @@ import com.example.shoppinglist.domain.ShopItem
 class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
     var count = 0
+    /**
+    TODO #11
+
+    Создаём callback(ShopListDiffUtilCallback), в котором реализуем логику сравнивания старого списка и нового.
+    Метод DiffUtil.calculateDiff() - производит вычисления.
+    result.dispatchUpdatesTo() - отправляет события обновления указанному адаптеру и какие методы надо вызвать(напр.
+        notifyItemChanged(int),notifyItemInserted(int),notifyItemRemoved(int),
+        notifyItemRangeChanged(int, int),notifyItemRangeInserted(int, int),notifyItemRangeRemoved(int, int)
+    ) - вызывается какой-то конкретный метод, вместо notifyDataSetChanged().
+    field = value - присваиваем новый список старому.
+     */
     var shopList = listOf<ShopItem>()
         set(value) {
+            val callback = ShopListDiffUtilCallback(shopList, value)
+            val result = DiffUtil.calculateDiff(callback)
+            result.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
         }
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
@@ -30,7 +44,6 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     onCreateViewHolder() и здесь в зависимости от этого значения устанавливаем нужную разметку.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
-        Log.d("onCreateViewHolder", "onCreateViewHolder $viewType! count: ${++count}")
         val layout = when (viewType) {
             VIEW_TYPE_ENABLED -> R.layout.item_shop_enabled
             VIEW_TYPE_DISABLED -> R.layout.item_shop_disabled
@@ -55,6 +68,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     Или переопределить метод onViewRecycled()
      */
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
+        Log.d("onBindViewHolder", "onBindViewHolder ${++count}")
         val shopItem = shopList[position]
         holder.view.setOnLongClickListener {
             onShopItemLongClickListener?.invoke(shopItem)

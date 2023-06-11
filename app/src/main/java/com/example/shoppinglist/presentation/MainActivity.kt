@@ -22,14 +22,31 @@ class MainActivity : AppCompatActivity() {
 
         setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        viewModel.shopList.observe(this){
+        viewModel.shopList.observe(this) {
             adapter.shopList = it
         }
     }
 
-    private fun setupRecyclerView(){
+    /**
+    TODO #8
+
+    recyclerView.recycledViewPool.setMaxRecycledViews() - устанавливаем вручную максимальное количество элементов
+    в пуле recyclerView, для каждого типа viewHolder.
+    При скроле - на экране видим 10 элементов, но есть ещё 5 элементов в пуле, чтобы не создавались новые элементы
+    вызываем метод ниже.
+     */
+    private fun setupRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.rv_shop_list)
         adapter = ShopListAdapter()
-        recyclerView.adapter = adapter
+        with(recyclerView) {
+            this.adapter = adapter
+            recycledViewPool.setMaxRecycledViews(
+                ShopListAdapter.VIEW_TYPE_ENABLED, ShopListAdapter.MAX_POOL_SIZE
+            )
+            recycledViewPool.setMaxRecycledViews(
+                ShopListAdapter.VIEW_TYPE_DISABLED, ShopListAdapter.MAX_POOL_SIZE
+            )
+        }
+
     }
 }

@@ -3,19 +3,15 @@ package com.example.shoppinglist.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
-import com.example.shoppinglist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var adapter: ShopListAdapter
+    private lateinit var shoppingAdapter: ShopListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -23,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
-            adapter.shopList = it
+            shoppingAdapter.shopList = it
         }
     }
 
@@ -37,9 +33,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setupRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.rv_shop_list)
-        adapter = ShopListAdapter()
+        shoppingAdapter = ShopListAdapter()
         with(recyclerView) {
-            this.adapter = adapter
+            adapter = shoppingAdapter
             recycledViewPool.setMaxRecycledViews(
                 ShopListAdapter.VIEW_TYPE_ENABLED, ShopListAdapter.MAX_POOL_SIZE
             )
@@ -48,5 +44,58 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        setupLongClickListener()
+        setupClickListener()
+        setupSwipeListener(recyclerView)
     }
+
+    /**
+    TODO #9
+
+    Удаление элемента из списка с помощью свайпа вправо или влево.
+     */
+    private fun setupSwipeListener(recyclerView: RecyclerView) {
+        val callback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val item = shoppingAdapter.shopList[viewHolder.adapterPosition]
+                viewModel.deleteShopItem(item)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    /**
+    TODO #10
+
+    Слушатель клика по элементу. Детали элемента.
+     */
+    private fun setupClickListener() {
+        shoppingAdapter.onShopItemClickListener = {
+            Log.d("onShopItemClickListener", it.toString())
+        }
+    }
+
+    /**
+    TODO #11
+
+    Слушатель долгого клика по элементу. Смена состояние элемента. Enabled or disabled.
+     */
+    private fun setupLongClickListener() {
+        shoppingAdapter.onShopItemLongClickListener = {
+            viewModel.changeEnableState(it)
+        }
+    }
+
 }

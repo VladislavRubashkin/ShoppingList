@@ -1,37 +1,12 @@
 package com.example.shoppinglist.presentation
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.ShopItem
 
-class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
-
-    var count = 0
-    /**
-    TODO #11
-
-    Создаём callback(ShopListDiffUtilCallback), в котором реализуем логику сравнивания старого списка и нового.
-    Метод DiffUtil.calculateDiff() - производит вычисления.
-    result.dispatchUpdatesTo() - отправляет события обновления указанному адаптеру и какие методы надо вызвать(напр.
-        notifyItemChanged(int),notifyItemInserted(int),notifyItemRemoved(int),
-        notifyItemRangeChanged(int, int),notifyItemRangeInserted(int, int),notifyItemRangeRemoved(int, int)
-    ) - вызывается какой-то конкретный метод, вместо notifyDataSetChanged().
-    field = value - присваиваем новый список старому.
-     */
-    var shopList = listOf<ShopItem>()
-        set(value) {
-            val callback = ShopListDiffUtilCallback(shopList, value)
-            val result = DiffUtil.calculateDiff(callback)
-            result.dispatchUpdatesTo(this)
-            field = value
-        }
+class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffUtilCallback()) {
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
@@ -53,10 +28,6 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         return ShopItemViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return shopList.size
-    }
-
     /**
     TODO #6
 
@@ -68,8 +39,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     Или переопределить метод onViewRecycled()
      */
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
-        Log.d("onBindViewHolder", "onBindViewHolder ${++count}")
-        val shopItem = shopList[position]
+        val shopItem = getItem(position)
         holder.view.setOnLongClickListener {
             onShopItemLongClickListener?.invoke(shopItem)
             true
@@ -81,25 +51,13 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         holder.tvCount.text = shopItem.count.toString()
     }
 
-    override fun onViewRecycled(holder: ShopItemViewHolder) {
-        super.onViewRecycled(holder)
-        holder.tvName.text = ""
-        holder.tvCount.text = ""
-        holder.tvName.setTextColor(ContextCompat.getColor(holder.view.context, android.R.color.white))
-    }
-
     override fun getItemViewType(position: Int): Int {
-        val shopItem = shopList[position]
+        val shopItem = getItem(position)
         return if (shopItem.enabled) {
             VIEW_TYPE_ENABLED
         } else {
             VIEW_TYPE_DISABLED
         }
-    }
-
-    class ShopItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val tvName = view.findViewById<TextView>(R.id.tv_name)
-        val tvCount = view.findViewById<TextView>(R.id.tv_count)
     }
 
     companion object {

@@ -13,7 +13,6 @@ class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffUt
 
     /**
     TODO #7
-
     Чтобы устанавливать viewHolder-ам разные разметки переопределяем метод getItemViewType().
     В нём в зависимости от условия возвращаем какое-то значение, оно приходит в аргументы метода
     onCreateViewHolder() и здесь в зависимости от этого значения устанавливаем нужную разметку.
@@ -30,7 +29,6 @@ class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffUt
 
     /**
     TODO #6
-
     В RecyclerView несколько элементов(ViewHolder) напр 15. Десять видны на экране ещё несколько сверху и снизу.
     При скроле списка элементы пере используются. Если мы делаем в методе onBindViewHolder() какое-то действие
     при выполнении условия, необходимо добавлять блок else, если это условие не выполнится.

@@ -2,7 +2,6 @@ package com.example.shoppinglist.domain
 
 /**
     TODO#1
-
     Domain-слой - бизнес логика
 
     God-object - объект, который делает всё(напр. Activity внутри которой происходит загрузка из сети, добавление в БД

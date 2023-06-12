@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     /**
     TODO #8
-
     recyclerView.recycledViewPool.setMaxRecycledViews() - устанавливаем вручную максимальное количество элементов
     в пуле recyclerView, для каждого типа viewHolder.
     При скроле - на экране видим 10 элементов, но есть ещё 5 элементов в пуле, чтобы не создавались новые элементы
@@ -51,7 +50,6 @@ class MainActivity : AppCompatActivity() {
 
     /**
     TODO #9
-
     Удаление элемента из списка с помощью свайпа вправо или влево.
      */
     private fun setupSwipeListener(recyclerView: RecyclerView) {
@@ -78,7 +76,6 @@ class MainActivity : AppCompatActivity() {
 
     /**
     TODO #10
-
     Слушатель клика по элементу. Детали элемента.
      */
     private fun setupClickListener() {
@@ -89,7 +86,6 @@ class MainActivity : AppCompatActivity() {
 
     /**
     TODO #11
-
     Слушатель долгого клика по элементу. Смена состояние элемента. Enabled or disabled.
      */
     private fun setupLongClickListener() {

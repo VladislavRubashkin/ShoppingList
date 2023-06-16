@@ -50,6 +50,12 @@ class ShopItemFragment : Fragment() {
         observeViewModel()
     }
 
+    /**
+    TODO #18.7
+    Подписываемся на обновления объектов viewModel для показа ошибок в текстовых полях ввода, если введённые значения
+    отсутствуют или не валидны и показываем ошибку.
+    Подписываемся на обновления объекта viewModel для закрытия экрана.
+     */
     private fun observeViewModel() {
         viewModel.errorInputName.observe(viewLifecycleOwner) {
             val message = if (it) {
@@ -72,6 +78,10 @@ class ShopItemFragment : Fragment() {
         }
     }
 
+    /**
+    TODO #18.4
+    Установка режима экрана в зависимости от значения переменной screenMode.
+     */
     private fun launchRightMode() {
         when (screenMode) {
             MODE_EDIT -> launchEditMode()
@@ -79,6 +89,11 @@ class ShopItemFragment : Fragment() {
         }
     }
 
+    /**
+    TODO #18.3
+    Если в текстовое поле начинают вводить текст, убираем сообщение об ошибке. Устанавливаем слушатели ввода текста
+    у полей ввода. Подписываемся на методы resetErrorInputName() и resetErrorInputCount() из ShopItemViewModel.
+     */
     private fun addTextChangeListeners() {
         etName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -102,6 +117,10 @@ class ShopItemFragment : Fragment() {
         })
     }
 
+    /**
+    TODO #18.6
+    Режим редактирования элемента.
+     */
     private fun launchEditMode() {
         viewModel.getShopItem(shopItemId)
         viewModel.shopItem.observe(viewLifecycleOwner) { shopItem ->
@@ -113,15 +132,22 @@ class ShopItemFragment : Fragment() {
             viewModel.editShopItem(etName.text?.toString(), etCount.text?.toString())
 
         }
-
     }
 
+    /**
+    TODO #18.5
+    Режим добавления элемента.
+     */
     private fun launchAddMode() {
         buttonSave.setOnClickListener {
             viewModel.addShopItem(etName.text?.toString(), etCount.text?.toString())
         }
     }
 
+    /**
+    TODO #18.2
+    Парсим полученные аргументы. Инициализируем переменные screenMode и shopItemId.
+     */
     private fun parseParams() {
         val args = requireArguments()
         if (!args.containsKey(SCREEN_MODE)) {

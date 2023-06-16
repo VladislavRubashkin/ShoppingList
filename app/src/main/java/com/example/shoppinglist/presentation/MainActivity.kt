@@ -3,6 +3,8 @@ package com.example.shoppinglist.presentation
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -14,10 +16,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var shoppingAdapter: ShopListAdapter
     private lateinit var buttonAddItem: FloatingActionButton
+    private var shopItemContainer: FragmentContainerView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        shopItemContainer = findViewById(R.id.shop_item_frag_container)
         setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
@@ -26,9 +30,43 @@ class MainActivity : AppCompatActivity() {
 
         buttonAddItem = findViewById(R.id.button_add_shop_item)
         buttonAddItem.setOnClickListener {
-            val intent = ShopItemActivity.newIntentAddItem(this)
-            startActivity(intent)
+            if (isOnePaneMode()) {
+                val intent = ShopItemActivity.newIntentAddItem(this)
+                startActivity(intent)
+            } else {
+                launchFragment(ShopItemFragment.newInstanceAddItem())
+            }
         }
+
+    }
+
+    /**
+    TODO #20
+    Есть две разметки, одна предназначена для вертикальной ориентации, другая для горизонтальной.
+    На вертикальной разметке элемента shopItemContainer НЕТ, соответственно его значение = null.
+    На горизонтальной этот контейнер есть соответственно он будет проинициализирован в onCreate().
+    Соответственно определяем ориентацию экрана исходя из значения этого элемента.
+     */
+    private fun isOnePaneMode(): Boolean {
+        return shopItemContainer == null
+    }
+
+    /**
+    TODO #21
+    Запускаем фрагмент в контейнере shop_item_frag_container.
+    addToBackStack() - добавляем фрагмент в backstack, чтобы при клике на кнопку "save" приложение не закрывалось.
+    Так как мы находимся на первой активити и при клике на кнопку "save" вызывается метод либо editShopItem() либо
+    addShopItem() из ShopItemViewModel, в которых вызывается метод finishWork() в котором onBackPressed() и текущая
+    activity закрывается.
+    popBackStack() - удаляет последний фрагмент из backstack.
+     */
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.shop_item_frag_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     /**
@@ -88,9 +126,12 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setupClickListener() {
         shoppingAdapter.onShopItemClickListener = {
-            Log.d("onShopItemClickListener", it.toString())
-            val intent = ShopItemActivity.newIntentEditItem(this, it.id)
-            startActivity(intent)
+            if (isOnePaneMode()) {
+                val intent = ShopItemActivity.newIntentEditItem(this, it.id)
+                startActivity(intent)
+            } else {
+                launchFragment(ShopItemFragment.newInstanceEditItem(it.id))
+            }
         }
     }
 

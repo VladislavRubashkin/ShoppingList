@@ -1,6 +1,7 @@
 package com.example.shoppinglist.presentation
 
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -24,8 +25,26 @@ class ShopItemFragment : Fragment() {
     private lateinit var buttonSave: Button
 
     private lateinit var viewModel: ShopItemViewModel
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFINED_ID
+
+
+    /**
+    TODO #23.1
+    onEditingFinishedListener - нельзя инициализировать из вне(напр из MainActivity и пр), так как при пересоздании
+    фрагмента(смена ориентации и пр) значение переменных сбрасываются.
+    Activity, содержащая фрагмент обязана реализовывать его интерфейс. Если она это не сделает - бросаем исключение.
+    context is OnEditingFinishedListener - так как activity реализует этот интерфейс.
+     */
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishedListener) {
+            onEditingFinishedListener = context
+        } else {
+            throw RuntimeException("Activity must implement OnEditingFinishedListener.")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +93,7 @@ class ShopItemFragment : Fragment() {
             tilCount.error = message
         }
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressedDispatcher?.onBackPressed()
+            onEditingFinishedListener.onEditingFinished()
         }
     }
 
@@ -172,6 +191,15 @@ class ShopItemFragment : Fragment() {
         etName = view.findViewById(R.id.ed_name)
         etCount = view.findViewById(R.id.ed_count)
         buttonSave = view.findViewById(R.id.save_button)
+    }
+
+    /**
+    TODO #23
+    Если fragment должен о чём-то сообщить activity, то делаем это через интерфейс.
+    Этот интерфейс реализует Activity, к которой прикреплён данный фрагмент.
+     */
+    interface OnEditingFinishedListener {
+        fun onEditingFinished()
     }
 
     companion object {

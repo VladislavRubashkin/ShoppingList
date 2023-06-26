@@ -11,18 +11,24 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.shoppinglist.R
+import com.example.shoppinglist.databinding.ActivityShopItemBinding
 import com.example.shoppinglist.domain.ShopItem
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
+    private var _binding: ActivityShopItemBinding? = null
+    private val binding: ActivityShopItemBinding
+        get() = _binding ?: throw RuntimeException("ActivityShopItemBinding == null")
+
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shop_item)
+        _binding = ActivityShopItemBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         parseIntent()
         /**
@@ -33,6 +39,11 @@ class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinished
         if (savedInstanceState == null) {
             launchRightMode()
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        _binding = null
     }
 
     override fun onEditingFinished() {

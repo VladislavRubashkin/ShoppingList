@@ -6,31 +6,38 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
+import com.example.shoppinglist.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
-    private lateinit var viewModel: MainViewModel
+    private var _binding: ActivityMainBinding? = null
+    private val binding: ActivityMainBinding
+        get() = _binding ?: throw RuntimeException("ActivityMainBinding == null")
+
+
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this)[MainViewModel::class.java]
+    }
     private lateinit var shoppingAdapter: ShopListAdapter
-    private lateinit var buttonAddItem: FloatingActionButton
-    private var shopItemContainer: FragmentContainerView? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        shopItemContainer = findViewById(R.id.shop_item_frag_container)
         setupRecyclerView()
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
             shoppingAdapter.submitList(it)
         }
 
-        buttonAddItem = findViewById(R.id.button_add_shop_item)
-        buttonAddItem.setOnClickListener {
+        binding.buttonAddShopItem.setOnClickListener {
             if (isOnePaneMode()) {
                 val intent = ShopItemActivity.newIntentAddItem(this)
                 startActivity(intent)
@@ -38,7 +45,11 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
                 launchFragment(ShopItemFragment.newInstanceAddItem())
             }
         }
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     override fun onEditingFinished() {
@@ -54,7 +65,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     Соответственно определяем ориентацию экрана исходя из значения этого элемента.
      */
     private fun isOnePaneMode(): Boolean {
-        return shopItemContainer == null
+        return binding.shopItemFragContainer == null
     }
 
     /**
@@ -83,9 +94,8 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     вызываем метод ниже.
      */
     private fun setupRecyclerView() {
-        val recyclerView = findViewById<RecyclerView>(R.id.rv_shop_list)
         shoppingAdapter = ShopListAdapter()
-        with(recyclerView) {
+        with(binding.rvShopList) {
             adapter = shoppingAdapter
             recycledViewPool.setMaxRecycledViews(
                 ShopListAdapter.VIEW_TYPE_ENABLED, ShopListAdapter.MAX_POOL_SIZE
@@ -97,7 +107,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
         setupLongClickListener()
         setupClickListener()
-        setupSwipeListener(recyclerView)
+        setupSwipeListener(binding.rvShopList)
     }
 
     /**

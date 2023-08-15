@@ -33,6 +33,7 @@ class ShopItemFragment : Fragment() {
 
     /**
     TODO #23.1
+
     onEditingFinishedListener - нельзя инициализировать из вне(напр из MainActivity и пр), так как при пересоздании
     фрагмента(смена ориентации и пр) значение переменных сбрасываются.
     Activity, содержащая фрагмент обязана реализовывать его интерфейс. Если она это не сделает - бросаем исключение.
@@ -111,6 +112,7 @@ class ShopItemFragment : Fragment() {
 
     /**
     TODO #18.7
+
     Подписываемся на обновления объектов viewModel для показа ошибок в текстовых полях ввода, если введённые значения
     отсутствуют или не валидны и показываем ошибку.
     Подписываемся на обновления объекта viewModel для закрытия экрана.
@@ -139,6 +141,7 @@ class ShopItemFragment : Fragment() {
 
     /**
     TODO #18.4
+
     Установка режима экрана в зависимости от значения переменной screenMode.
      */
     private fun launchRightMode() {
@@ -150,6 +153,7 @@ class ShopItemFragment : Fragment() {
 
     /**
     TODO #18.3
+
     Если в текстовое поле начинают вводить текст, убираем сообщение об ошибке. Устанавливаем слушатели ввода текста
     у полей ввода. Подписываемся на методы resetErrorInputName() и resetErrorInputCount() из ShopItemViewModel.
      */
@@ -178,6 +182,7 @@ class ShopItemFragment : Fragment() {
 
     /**
     TODO #18.6
+
     Режим редактирования элемента.
      */
     private fun launchEditMode() {
@@ -195,6 +200,7 @@ class ShopItemFragment : Fragment() {
 
     /**
     TODO #18.5
+
     Режим добавления элемента.
      */
     private fun launchAddMode() {
@@ -205,6 +211,7 @@ class ShopItemFragment : Fragment() {
 
     /**
     TODO #18.2
+
     Парсим полученные аргументы. Инициализируем переменные screenMode и shopItemId.
      */
     private fun parseParams() {
@@ -235,6 +242,7 @@ class ShopItemFragment : Fragment() {
 
     /**
     TODO #23
+
     Если fragment должен о чём-то сообщить activity, то делаем это через интерфейс.
     Этот интерфейс реализует Activity, к которой прикреплён данный фрагмент.
      */
@@ -245,6 +253,7 @@ class ShopItemFragment : Fragment() {
     companion object {
         /**
         TODO #19
+
         Константы делаем приватными.
         Создаём два статических метода, каждый из которых возвращает ShopItemFragment.
         Во фрагменты интенты отправлять не стоит, передавать значения нужно с помощью Bundle.

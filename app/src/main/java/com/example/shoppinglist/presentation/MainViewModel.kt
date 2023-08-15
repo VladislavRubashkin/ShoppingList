@@ -10,6 +10,7 @@ import com.example.shoppinglist.domain.ShopItem
 
 /**
 TODO#4
+
 Presentation слой отвечает за отображение и взаимодействие с пользователем.
 Presentation слой зависит от domain слоя.
 Методы бизнес логики вызываются из UseCase.
@@ -30,6 +31,7 @@ class MainViewModel : ViewModel() {
 
     /**
     TODO#4.1
+
     Работаем через MutableLiveData, из activity подписываемся на эту LiveData.
     ВАЖНО: setValue(или просто value) - можно вызывать только из главного потока, postValue - из любого потока.
      */

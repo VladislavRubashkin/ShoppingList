@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
     /**
     TODO #20
+
     Есть две разметки, одна предназначена для вертикальной ориентации, другая для горизонтальной.
     На вертикальной разметке элемента shopItemContainer НЕТ, соответственно его значение = null.
     На горизонтальной этот контейнер есть соответственно он будет проинициализирован в onCreate().
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
     /**
     TODO #21
+
     Запускаем фрагмент в контейнере shop_item_frag_container.
     addToBackStack() - добавляем фрагмент в backstack, чтобы при клике на кнопку "save" приложение не закрывалось.
     Так как мы находимся на первой активити и при клике на кнопку "save" вызывается метод либо editShopItem() либо
@@ -77,6 +79,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
     /**
     TODO #8
+
     recyclerView.recycledViewPool.setMaxRecycledViews() - устанавливаем вручную максимальное количество элементов
     в пуле recyclerView, для каждого типа viewHolder.
     При скроле - на экране видим 10 элементов, но есть ещё 5 элементов в пуле, чтобы не создавались новые элементы
@@ -102,6 +105,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
     /**
     TODO #9
+
     Удаление элемента из списка с помощью свайпа вправо или влево.
      */
     private fun setupSwipeListener(recyclerView: RecyclerView) {
@@ -128,6 +132,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
     /**
     TODO #10
+
     Слушатель клика по элементу. Редактирование элемента.
      */
     private fun setupClickListener() {
@@ -143,6 +148,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
     /**
     TODO #11
+
     Слушатель долгого клика по элементу. Смена состояние элемента. Enabled or disabled.
      */
     private fun setupLongClickListener() {

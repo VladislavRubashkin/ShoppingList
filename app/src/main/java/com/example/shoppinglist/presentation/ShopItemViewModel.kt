@@ -19,6 +19,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#15
+
     Объект, передачи ошибки ввода имени.
     Так как доступа к activity здесь нет а логика проверки на ошибку здесь, создаётся объект LiveData и в случае
     ошибки передаёт на activity какое-то значение, activity подписывается на эту LiveData и получает это значение
@@ -37,6 +38,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#15.1
+
     Объект, передачи ошибки ввода количества.
      */
     private val _errorInputCount = MutableLiveData<Boolean>()
@@ -45,6 +47,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#12.1
+
     Объект, передачи shopItem.
      */
     private val _shopItem = MutableLiveData<ShopItem>()
@@ -53,6 +56,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#16
+
     После того как мы добавили новый элемент или отредактировали его, необходимо закрыть экран и вернуться на
     предыдущее activity.
     Вызвать в activity метод finish() после методов добавления или редактирования - НЕ ПРАВИЛЬНО.
@@ -65,6 +69,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#12
+
     Получаем элемент по id. Кладём элемент в LiveData.
      */
     fun getShopItem(shopItemId: Int) {
@@ -74,6 +79,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#13
+
     Добавляем элемент.
     Всю валидацию и парсинг надо делать во ViewModel а не в Activity. Activity должна только
     отображать данные и отправлять их во ViewModel.
@@ -93,6 +99,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#14
+
     Редактируем элемент.
     Парсим поля, валидируем поля, если валидация успешна - получаем старый объект из LiveData и
     заменяем у него нужные поля
@@ -112,6 +119,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#13.1
+
     Парсим нулабельный String к не нулабельному String, обрезаем пробелы и если string равен null,
     возвращаем пустую строку
      */
@@ -121,6 +129,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#13.2
+
     Парсим нулабельный String к не нулабельному Double, обрезаем пробелы и если string равен null,
     возвращаем 0.0. Если привести строку к числу не получилось - бросаем исключение и возвращаем 0.0.
      */
@@ -134,6 +143,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#13.3
+
     Валидация. Что имя не пустое а количество больше нуля. В случае если поля не валидны - записываем в LiveData
     определённое значение, а в activity его примем и в зависимости от него покажем ошибку.
      */
@@ -152,6 +162,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#15.2
+
     Сбрасываем значение об ошибке в поле Name.
     Если в поле ввода отобразилась ошибка и пользователь продолжил вводить данные, то ошибку нужно убрать.
      */
@@ -161,6 +172,7 @@ class ShopItemViewModel : ViewModel() {
 
     /**
     TODO#15.3
+
     Сбрасываем значение об ошибке в поле Count.
      */
     fun resetErrorInputCount() {

@@ -27,6 +27,7 @@ class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinished
         parseIntent()
         /**
         TODO #22
+
         Чтобы при перевороте экрана фрагмент не создавался два раза. Так как при перевороте экрана фрагмент пересоздаёт
         система и мы в методе launchRightMode()
          */
@@ -41,6 +42,7 @@ class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinished
 
     /**
     TODO #18.1
+
     Открытие фрагмента с нужным режимом экрана(редактирование или добавление), в зависимости от
     значения переменной screenMode.
      */
@@ -58,6 +60,7 @@ class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinished
 
     /**
     TODO #18
+
     Получаем intents из MainActivity. Проверяем их на нужную информацию. Передаём их значения полям screenMode и
     shopItemId.
      */
@@ -81,6 +84,7 @@ class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinished
     companion object {
         /**
         TODO #17
+
         Константы делаем приватными.
         Создаём два статических метода, каждый из которых возвращает intent.
         При нажатии на кнопку buttonAddItem -> newIntentAddItem() - открываем экран в режиме добавления элемента.

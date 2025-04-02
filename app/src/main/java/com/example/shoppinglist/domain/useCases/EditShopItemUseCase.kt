@@ -8,6 +8,6 @@ class EditShopItemUseCase(
 ) {
 
     suspend operator fun invoke(shopItem: ShopItemEntity) {
-        return repository.editShopItem(shopItem)
+        repository.editShopItem(shopItem)
     }
 }

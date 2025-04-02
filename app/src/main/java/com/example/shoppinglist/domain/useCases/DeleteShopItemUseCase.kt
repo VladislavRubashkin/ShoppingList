@@ -8,6 +8,6 @@ class DeleteShopItemUseCase(
 ) {
 
     suspend operator fun invoke(shopItem: ShopItemEntity) {
-        return repository.deleteShopItem(shopItem)
+        repository.deleteShopItem(shopItem)
     }
 }

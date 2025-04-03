@@ -1,24 +1,31 @@
-package com.example.shoppinglist.presentation
+package com.example.shoppinglist.presentation.screens
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.example.shoppinglist.R
 
-class MainActivity : AppCompatActivity() {
+class ContainerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        setContentView(R.layout.activity_container)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_container)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val test = findViewById<TextView>(R.id.tv_text)
-        test.text = "Test"
+
+        launchFrag(SplashFragment.newInstance())
+    }
+
+    private fun launchFrag(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.activity_container, fragment)
+            .commit()
     }
 }

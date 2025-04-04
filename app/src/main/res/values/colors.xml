@@ -8,4 +8,6 @@
     <color name="blue_main_light">#5C5C9A</color>
     <color name="blue_main_dark">#4A4A7E</color>
 
+    <color name="shop_item_enabled_background2">#205771</color>   //Прикольный цвет
+
 </resources>

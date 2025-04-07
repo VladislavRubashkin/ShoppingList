@@ -48,4 +48,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    // LiveData
+    implementation(libs.androidx.lifecycle.runtime.ktx)
 }

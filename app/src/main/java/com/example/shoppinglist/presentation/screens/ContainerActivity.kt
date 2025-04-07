@@ -7,7 +7,15 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.ActivityContainerBinding
-
+/*
+TODO:
+ 1. Add animation navigation back ShopItemFragment
+ 2. Replace TextWatcher with TextWatcherAdapter()
+ 3. Add Settings Activity
+ 4. LiveData replace Flow
+ 5. Add Dependency Injection
+ 6. Add Data base
+ */
 class ContainerActivity : AppCompatActivity() {
 
     private val binding: ActivityContainerBinding by lazy {
@@ -30,7 +38,7 @@ class ContainerActivity : AppCompatActivity() {
     private fun launchFragment() {
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.activity_container, SplashFragment.newInstance())
+            .replace(R.id.activity_container, ShopListFragment.newInstance())
             .commit()
     }
 }

@@ -1,5 +1,6 @@
 package com.example.shoppinglist.domain.repository
 
+import androidx.lifecycle.LiveData
 import com.example.shoppinglist.domain.entity.ShopItemEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -13,5 +14,5 @@ interface ShopListRepository {
 
     fun deleteShopItem(shopItem: ShopItemEntity)
 
-    fun getListShopItem(): Flow<List<ShopItemEntity>>
+    fun getListShopItem(): LiveData<List<ShopItemEntity>>
 }

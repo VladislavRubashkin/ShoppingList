@@ -1,41 +1,53 @@
 package com.example.shoppinglist.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.shoppinglist.domain.entity.ShopItemEntity
 import com.example.shoppinglist.domain.repository.ShopListRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlin.random.Random
 
-class ShopListRepositoryImpl : ShopListRepository {
+object ShopListRepositoryImpl : ShopListRepository {
 
-    private val list = mutableListOf<ShopItemEntity>()
-    private var id = 0
+    private val shopList = sortedSetOf<ShopItemEntity>({ o1, o2 -> o1.id.compareTo(o2.id) })
+    private val shopListLiveData = MutableLiveData<List<ShopItemEntity>>()
+    private var autoIncrementId = 0
+
+    init {
+        repeat(15) {
+            val item = ShopItemEntity(name = "name $it", count = it.toDouble(), enabled = Random.nextBoolean())
+            addShopItem(item)
+        }
+    }
 
     override fun getShopItem(shopItemId: Int): ShopItemEntity {
-        return list.find { it.id == shopItemId } ?: notFoundItem(shopItemId)
+        return shopList.find { it.id == shopItemId } ?: notFoundItem(shopItemId)
     }
 
     override fun addShopItem(shopItem: ShopItemEntity) {
-        if (shopItem.id == ShopItemEntity.UNDEFINED_ID)
-            shopItem.id = id++
-        list.add(shopItem)
+        if (shopItem.id == ShopItemEntity.UNDEFINED_ID) {
+            shopItem.id = autoIncrementId++
+        }
+        shopList.add(shopItem)
+        updateList()
     }
 
     override fun editShopItem(shopItem: ShopItemEntity) {
-        for (item in list) {
-            if (item.id == shopItem.id) {
-                item.copy(name = shopItem.name, count = shopItem.count, enabled = shopItem.enabled)
-            }
-        }
+        val oldElement = getShopItem(shopItem.id)
+        shopList.remove(oldElement)
+        addShopItem(shopItem)
     }
 
     override fun deleteShopItem(shopItem: ShopItemEntity) {
-        list.remove(shopItem)
+        shopList.remove(shopItem)
+        updateList()
     }
 
-    override fun getListShopItem(): Flow<List<ShopItemEntity>> {
-        return flow {
-            emit(list)
-        }
+    override fun getListShopItem(): LiveData<List<ShopItemEntity>> {
+        return shopListLiveData
+    }
+
+    private fun updateList() {
+        shopListLiveData.value = shopList.toList()
     }
 
     private fun notFoundItem(shopItemId: Int): Nothing {

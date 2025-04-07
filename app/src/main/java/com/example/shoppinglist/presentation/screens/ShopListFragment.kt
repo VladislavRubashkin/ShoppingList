@@ -1,17 +1,21 @@
 package com.example.shoppinglist.presentation.screens
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.FragmentShopListBinding
-import com.example.shoppinglist.domain.entity.ShopItemEntity
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.shoppinglist.presentation.viewmodels.ShopListViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ShopListFragment : Fragment() {
 
@@ -19,7 +23,11 @@ class ShopListFragment : Fragment() {
     private val binding: FragmentShopListBinding
         get() = _binding ?: throw RuntimeException("FragmentShopListBinding == null")
 
+    private val scope = CoroutineScope(Dispatchers.Main)
     private lateinit var shopListAdapter: ShopListAdapter
+    private val shopListViewModel by lazy {
+        ViewModelProvider(this)[ShopListViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,35 +47,29 @@ class ShopListFragment : Fragment() {
     }
 
     private fun getShopItemList() {
-        val list = mutableListOf<ShopItemEntity>()
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(1, "name 1", 2.3, true))
-        list.add(ShopItemEntity(2, "name 2", 2.3, false))
-        list.add(ShopItemEntity(2, "name 2", 2.3, false))
-        shopListAdapter.submitList(list)
+        shopListViewModel.shopList.observe(viewLifecycleOwner) {
+            shopListAdapter.submitList(it)
+        }
+//        scope.launch {
+//            shopListViewModel.shopList.collect {
+////                Log.d("TagTag", "$it")
+//                shopListAdapter.submitList(it)
+//            }
+//        }
     }
 
     private fun addShopItem() {
         binding.fabAdd.setOnClickListener {
-            launchFragment()
+            launchFragment(ShopItemFragment.newInstanceAddShopItem())
         }
     }
 
-    private fun launchFragment() {
+    private fun launchFragment(fragment: Fragment) {
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .addToBackStack(null)
             .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-            .replace(R.id.activity_container, ShopItemFragment.newInstance())
+            .replace(R.id.activity_container, fragment)
+            .addToBackStack(null)
             .commit()
     }
 
@@ -90,13 +92,13 @@ class ShopListFragment : Fragment() {
 
     private fun setupClickListener() {
         shopListAdapter.onShopItemClickListener = {
-            println(it.toString())
+            launchFragment(ShopItemFragment.newInstanceEditShopItem(it.id))
         }
     }
 
     private fun setupLongClickListener() {
         shopListAdapter.onShopItemLongClickListener = {
-            println("Long click $it")
+            shopListViewModel.editShopItem(it)
         }
     }
 
@@ -115,7 +117,7 @@ class ShopListFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = shopListAdapter.currentList[viewHolder.adapterPosition]
-                println("Swipe $item")
+                shopListViewModel.deleteShopItem(item)
             }
 
         }

@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.ActivityContainerBinding
+
 /*
 TODO:
  1. Add animation navigation back ShopItemFragment
@@ -15,6 +16,8 @@ TODO:
  4. LiveData replace Flow
  5. Add Dependency Injection
  6. Add Data base
+ 7. Add ksp plugin +
+ 8. Navigation component + safe args +
  */
 class ContainerActivity : AppCompatActivity() {
 
@@ -32,13 +35,5 @@ class ContainerActivity : AppCompatActivity() {
             insets
         }
 
-        launchFragment()
-    }
-
-    private fun launchFragment() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.activity_container, ShopListFragment.newInstance())
-            .commit()
     }
 }

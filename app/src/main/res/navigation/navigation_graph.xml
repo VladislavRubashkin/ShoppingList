@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.shoppinglist.presentation.screens.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_shopListFragment"
+            app:destination="@id/shopListFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/shopListFragment"
+        android:name="com.example.shoppinglist.presentation.screens.ShopListFragment"
+        android:label="fragment_shop_list"
+        tools:layout="@layout/fragment_shop_list" >
+        <action
+            android:id="@+id/action_shopListFragment_to_shopItemFragment"
+            app:destination="@id/shopItemFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/shopListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shopItemFragment"
+        android:name="com.example.shoppinglist.presentation.screens.ShopItemFragment"
+        android:label="fragment_shop_item"
+        tools:layout="@layout/fragment_shop_item" >
+        <argument
+            android:name="screenMode"
+            app:argType="string" />
+        <argument
+            android:name="shopItemId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+</navigation>

@@ -1,21 +1,19 @@
 package com.example.shoppinglist.presentation.screens
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.FragmentShopListBinding
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter
+import com.example.shoppinglist.presentation.constans.Constants
 import com.example.shoppinglist.presentation.viewmodels.ShopListViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
 
 class ShopListFragment : Fragment() {
 
@@ -23,10 +21,9 @@ class ShopListFragment : Fragment() {
     private val binding: FragmentShopListBinding
         get() = _binding ?: throw RuntimeException("FragmentShopListBinding == null")
 
-    private val scope = CoroutineScope(Dispatchers.Main)
     private lateinit var shopListAdapter: ShopListAdapter
     private val shopListViewModel by lazy {
-        ViewModelProvider(this)[ShopListViewModel::class.java]
+        ViewModelProvider(this, ViewModelFactory())[ShopListViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -50,27 +47,18 @@ class ShopListFragment : Fragment() {
         shopListViewModel.shopList.observe(viewLifecycleOwner) {
             shopListAdapter.submitList(it)
         }
-//        scope.launch {
-//            shopListViewModel.shopList.collect {
-////                Log.d("TagTag", "$it")
-//                shopListAdapter.submitList(it)
-//            }
-//        }
+    }
+
+    private fun launchShopItemFragment(screenMode: String, shopItemId: Int) {
+        findNavController().navigate(
+            ShopListFragmentDirections.actionShopListFragmentToShopItemFragment(screenMode, shopItemId)
+        )
     }
 
     private fun addShopItem() {
         binding.fabAdd.setOnClickListener {
-            launchFragment(ShopItemFragment.newInstanceAddShopItem())
+            launchShopItemFragment(screenMode = Constants.MODE_ADD, shopItemId = Constants.UNDEFINED_ID)
         }
-    }
-
-    private fun launchFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-            .replace(R.id.activity_container, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     private fun initRecyclerView() {
@@ -92,7 +80,7 @@ class ShopListFragment : Fragment() {
 
     private fun setupClickListener() {
         shopListAdapter.onShopItemClickListener = {
-            launchFragment(ShopItemFragment.newInstanceEditShopItem(it.id))
+            launchShopItemFragment(screenMode = Constants.MODE_EDIT, shopItemId = it.id)
         }
     }
 
@@ -128,10 +116,5 @@ class ShopListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = ShopListFragment()
     }
 }

@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.FragmentShopItemBinding
-import com.example.shoppinglist.domain.entity.ShopItemEntity
+import com.example.shoppinglist.presentation.constans.Constants
 import com.example.shoppinglist.presentation.viewmodels.ShopItemViewModel
+import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
 
 class ShopItemFragment : Fragment() {
 
@@ -19,16 +22,10 @@ class ShopItemFragment : Fragment() {
     private val binding: FragmentShopItemBinding
         get() = _binding ?: throw RuntimeException("FragmentShopItemBinding == null")
 
+    private val args by navArgs<ShopItemFragmentArgs>()
+
     private val shopItemViewModel by lazy {
-        ViewModelProvider(this)[ShopItemViewModel::class.java]
-    }
-
-    private var shopItemId = ShopItemEntity.UNDEFINED_ID
-    private var screenMode = MODE_UNKNOWN
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        parseArgs()
+        ViewModelProvider(this, ViewModelFactory())[ShopItemViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -49,9 +46,9 @@ class ShopItemFragment : Fragment() {
     }
 
     private fun launchRightMode() {
-        when (screenMode) {
-            MODE_ADD -> addShopItem()
-            MODE_EDIT -> editShopItem()
+        when (args.screenMode) {
+            Constants.MODE_ADD -> addShopItem()
+            Constants.MODE_EDIT -> editShopItem()
         }
     }
 
@@ -62,7 +59,7 @@ class ShopItemFragment : Fragment() {
     }
 
     private fun editShopItem() {
-        shopItemViewModel.getShopItem(shopItemId)
+        shopItemViewModel.getShopItem(args.shopItemId)
         shopItemViewModel.shopItem.observe(viewLifecycleOwner) {
             binding.etName.setText(it.name)
             binding.etCount.setText(it.count.toString())
@@ -92,7 +89,8 @@ class ShopItemFragment : Fragment() {
         }
 
         shopItemViewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            requireActivity().supportFragmentManager.popBackStack()
+
+            findNavController().popBackStack()
         }
     }
 
@@ -118,52 +116,8 @@ class ShopItemFragment : Fragment() {
         })
     }
 
-    private fun parseArgs() {
-        val args = requireArguments()
-        if (!args.containsKey(SCREEN_MODE)) {
-            throw RuntimeException("Param screen mode is absent")
-        }
-        val mode = args.getString(SCREEN_MODE)
-        if (mode != MODE_ADD && mode != MODE_EDIT) {
-            throw RuntimeException("Unknown screen mode $mode")
-        }
-        screenMode = mode
-        if (screenMode == MODE_EDIT) {
-            if (!args.containsKey(SHOP_ITEM_ID)) {
-                throw RuntimeException("Param extra shop item id is absent")
-            }
-            shopItemId = args.getInt(SHOP_ITEM_ID, ShopItemEntity.UNDEFINED_ID)
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-
-        private const val SCREEN_MODE = "extra_mode"
-        private const val MODE_EDIT = "mode_edit"
-        private const val MODE_ADD = "mode_add"
-        private const val SHOP_ITEM_ID = "shop_item_id"
-        private const val MODE_UNKNOWN = ""
-
-        fun newInstanceAddShopItem(): ShopItemFragment {
-            return ShopItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_ADD)
-                }
-            }
-        }
-
-        fun newInstanceEditShopItem(shopItemId: Int): ShopItemFragment {
-            return ShopItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_EDIT)
-                    putInt(SHOP_ITEM_ID, shopItemId)
-                }
-            }
-        }
     }
 }

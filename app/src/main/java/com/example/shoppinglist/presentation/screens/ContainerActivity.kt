@@ -21,6 +21,7 @@ TODO:
  9. Unit-tests
  10. State screen ???
  11. Кэширование ???
+ 12. Code style(linter???)
  */
 class ContainerActivity : AppCompatActivity() {
 

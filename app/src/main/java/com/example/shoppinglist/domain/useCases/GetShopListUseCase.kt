@@ -3,9 +3,9 @@ package com.example.shoppinglist.domain.useCases
 import androidx.lifecycle.LiveData
 import com.example.shoppinglist.domain.entity.ShopItemEntity
 import com.example.shoppinglist.domain.repository.ShopListRepository
-import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class GetShopListUseCase(
+class GetShopListUseCase @Inject constructor(
     private val repository: ShopListRepository
 ) {
 

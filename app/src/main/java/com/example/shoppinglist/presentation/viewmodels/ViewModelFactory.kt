@@ -1,19 +1,17 @@
 package com.example.shoppinglist.presentation.viewmodels
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.shoppinglist.di.ApplicationScope
+import javax.inject.Inject
+import javax.inject.Provider
 
-class ViewModelFactory(
-    val application: Application
+@ApplicationScope
+class ViewModelFactory @Inject constructor(
+    private val viewModelProviders: @JvmSuppressWildcards Map<Class<out ViewModel>, Provider<ViewModel>>
 ): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ShopListViewModel::class.java)) {
-            return ShopListViewModel(application) as T
-        } else if (modelClass.isAssignableFrom(ShopItemViewModel::class.java)) {
-            return ShopItemViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        return viewModelProviders[modelClass]?.get() as T
     }
 }

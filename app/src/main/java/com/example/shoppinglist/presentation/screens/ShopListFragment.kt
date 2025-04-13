@@ -1,5 +1,6 @@
 package com.example.shoppinglist.presentation.screens
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +11,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.databinding.FragmentShopListBinding
+import com.example.shoppinglist.presentation.ShoppingListApp
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter
 import com.example.shoppinglist.presentation.constans.Constants
 import com.example.shoppinglist.presentation.viewmodels.ShopListViewModel
 import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
+import javax.inject.Inject
 
 class ShopListFragment : Fragment() {
 
@@ -23,8 +26,20 @@ class ShopListFragment : Fragment() {
 
     private lateinit var shopListAdapter: ShopListAdapter
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val shopListViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory(requireActivity().application))[ShopListViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[ShopListViewModel::class.java]
+    }
+
+    private val component by lazy {
+        (requireActivity().application as ShoppingListApp).component
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateView(

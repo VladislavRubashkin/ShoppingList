@@ -1,6 +1,7 @@
 package com.example.shoppinglist.presentation.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +12,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.FragmentShopItemBinding
+import com.example.shoppinglist.presentation.ShoppingListApp
 import com.example.shoppinglist.presentation.constans.Constants
 import com.example.shoppinglist.presentation.viewmodels.ShopItemViewModel
 import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
 import com.google.android.material.internal.TextWatcherAdapter
+import javax.inject.Inject
 
 class ShopItemFragment : Fragment() {
 
@@ -24,8 +27,20 @@ class ShopItemFragment : Fragment() {
 
     private val args by navArgs<ShopItemFragmentArgs>()
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val shopItemViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory(requireActivity().application))[ShopItemViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[ShopItemViewModel::class.java]
+    }
+
+    private val component by lazy {
+        (requireActivity().application as ShoppingListApp).component
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateView(

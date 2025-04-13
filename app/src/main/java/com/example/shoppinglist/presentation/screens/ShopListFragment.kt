@@ -22,8 +22,9 @@ class ShopListFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentShopListBinding == null")
 
     private lateinit var shopListAdapter: ShopListAdapter
+
     private val shopListViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory())[ShopListViewModel::class.java]
+        ViewModelProvider(this, ViewModelFactory(requireActivity().application))[ShopListViewModel::class.java]
     }
 
     override fun onCreateView(

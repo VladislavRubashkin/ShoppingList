@@ -49,16 +49,25 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // Splash screen
     implementation(libs.androidx.core.splashscreen)
+
+    // Viewmodel scope
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     // LiveData
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
-    // Fragment - delete???
-    implementation(libs.androidx.fragment.ktx)
-
     // Navigation
     implementation (libs.androidx.navigation.fragment.ktx)
     implementation (libs.androidx.navigation.ui.ktx)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 }

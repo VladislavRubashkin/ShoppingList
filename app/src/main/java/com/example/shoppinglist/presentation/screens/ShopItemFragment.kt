@@ -1,8 +1,7 @@
 package com.example.shoppinglist.presentation.screens
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import com.example.shoppinglist.databinding.FragmentShopItemBinding
 import com.example.shoppinglist.presentation.constans.Constants
 import com.example.shoppinglist.presentation.viewmodels.ShopItemViewModel
 import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
+import com.google.android.material.internal.TextWatcherAdapter
 
 class ShopItemFragment : Fragment() {
 
@@ -25,7 +25,7 @@ class ShopItemFragment : Fragment() {
     private val args by navArgs<ShopItemFragmentArgs>()
 
     private val shopItemViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory())[ShopItemViewModel::class.java]
+        ViewModelProvider(this, ViewModelFactory(requireActivity().application))[ShopItemViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -89,30 +89,22 @@ class ShopItemFragment : Fragment() {
         }
 
         shopItemViewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-
             findNavController().popBackStack()
         }
     }
 
+    @SuppressLint("RestrictedApi")
     private fun addChangeListener() {
-        binding.etName.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        binding.etName.addTextChangedListener(object : TextWatcherAdapter() {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 shopItemViewModel.resetErrorInputName()
             }
-
-            override fun afterTextChanged(s: Editable?) {}
         })
 
-        binding.etCount.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        binding.etCount.addTextChangedListener(object : TextWatcherAdapter() {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 shopItemViewModel.resetErrorInputCount()
             }
-
-            override fun afterTextChanged(s: Editable?) {}
         })
     }
 

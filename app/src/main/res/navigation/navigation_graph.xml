@@ -13,8 +13,10 @@
         <action
             android:id="@+id/action_splashFragment_to_shopListFragment"
             app:destination="@id/shopListFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/shopListFragment"
@@ -24,8 +26,10 @@
         <action
             android:id="@+id/action_shopListFragment_to_shopItemFragment"
             app:destination="@id/shopItemFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
             app:popUpTo="@id/shopListFragment" />
     </fragment>
     <fragment

@@ -14,6 +14,7 @@ import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.FragmentShopItemBinding
 import com.example.shoppinglist.presentation.ShoppingListApp
 import com.example.shoppinglist.presentation.constans.Constants
+import com.example.shoppinglist.presentation.statescreen.StateShopItemFragment
 import com.example.shoppinglist.presentation.viewmodels.ShopItemViewModel
 import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
 import com.google.android.material.internal.TextWatcherAdapter
@@ -75,36 +76,50 @@ class ShopItemFragment : Fragment() {
 
     private fun editShopItem() {
         shopItemViewModel.getShopItem(args.shopItemId)
-        shopItemViewModel.shopItem.observe(viewLifecycleOwner) {
-            binding.etName.setText(it.name)
-            binding.etCount.setText(it.count.toString())
-        }
         binding.saveButton.setOnClickListener {
-            shopItemViewModel.editShopItem(binding.etName.text.toString(), binding.etCount.text.toString())
+            shopItemViewModel.editShopItem(
+                binding.etName.text.toString(),
+                binding.etCount.text.toString(),
+                args.shopItemId
+            )
         }
     }
 
     private fun observeViewModel() {
-        shopItemViewModel.errorInputName.observe(viewLifecycleOwner) {
-            val errorInputName = if (it) {
-                getString(R.string.error_input_name)
-            } else {
-                null
-            }
-            binding.tilName.error = errorInputName
-        }
+        shopItemViewModel.state.observe(viewLifecycleOwner) {
+            binding.pbLoading.visibility = View.GONE
+            when (it) {
+                is StateShopItemFragment.ErrorInputCount -> {
+                    val errorInputCount = if (it.isError) {
+                        getString(R.string.error_input_count)
+                    } else {
+                        null
+                    }
+                    binding.tilCount.error = errorInputCount
+                }
 
-        shopItemViewModel.errorInputCount.observe(viewLifecycleOwner) {
-            val errorInputCount = if (it) {
-                getString(R.string.error_input_count)
-            } else {
-                null
-            }
-            binding.tilCount.error = errorInputCount
-        }
+                is StateShopItemFragment.ErrorInputName -> {
+                    val errorInputName = if (it.isError) {
+                        getString(R.string.error_input_name)
+                    } else {
+                        null
+                    }
+                    binding.tilName.error = errorInputName
+                }
 
-        shopItemViewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            findNavController().popBackStack()
+                is StateShopItemFragment.Result -> {
+                    binding.etName.setText(it.shopItemEntity.name)
+                    binding.etCount.setText(it.shopItemEntity.count.toString())
+                }
+
+                is StateShopItemFragment.ShouldCloseScreen -> {
+                    findNavController().popBackStack()
+                }
+
+                is StateShopItemFragment.Loading -> {
+                    binding.pbLoading.visibility = View.VISIBLE
+                }
+            }
         }
     }
 

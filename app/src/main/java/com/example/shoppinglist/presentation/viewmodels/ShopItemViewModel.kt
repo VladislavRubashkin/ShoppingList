@@ -8,6 +8,7 @@ import com.example.shoppinglist.domain.entity.ShopItemEntity
 import com.example.shoppinglist.domain.useCases.AddShopItemUseCase
 import com.example.shoppinglist.domain.useCases.EditShopItemUseCase
 import com.example.shoppinglist.domain.useCases.GetShopItemUseCase
+import com.example.shoppinglist.presentation.statescreen.StateShopItemFragment
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,25 +18,15 @@ class ShopItemViewModel @Inject constructor(
     private val editShopItemUseCase: EditShopItemUseCase,
 ) : ViewModel() {
 
-    private val _shopItem = MutableLiveData<ShopItemEntity>()
-    val shopItem: LiveData<ShopItemEntity>
-        get() = _shopItem
+    private val _state = MutableLiveData<StateShopItemFragment>()
+    val state: LiveData<StateShopItemFragment>
+        get() = _state
 
-    private val _errorInputName = MutableLiveData<Boolean>()
-    val errorInputName: LiveData<Boolean>
-        get() = _errorInputName
-
-    private val _errorInputCount = MutableLiveData<Boolean>()
-    val errorInputCount: LiveData<Boolean>
-        get() = _errorInputCount
-
-    private val _shouldCloseScreen = MutableLiveData<Unit>()
-    val shouldCloseScreen: LiveData<Unit>
-        get() = _shouldCloseScreen
 
     fun getShopItem(shopItemId: Int) {
         viewModelScope.launch {
-            _shopItem.value = getShopItemUseCase(shopItemId)
+            loading()
+            _state.value = StateShopItemFragment.Result(getShopItemUseCase(shopItemId = shopItemId))
         }
     }
 
@@ -44,6 +35,7 @@ class ShopItemViewModel @Inject constructor(
         val count = parseCount(inputCount)
         if (validateInput(name, count)) {
             viewModelScope.launch {
+                loading()
                 val shopItem = ShopItemEntity(name = name, count = count, enabled = true)
                 addShopItemUseCase(shopItem)
                 finish()
@@ -51,16 +43,16 @@ class ShopItemViewModel @Inject constructor(
         }
     }
 
-    fun editShopItem(inputName: String?, inputCount: String?) {
+    fun editShopItem(inputName: String?, inputCount: String?, shopItemId: Int) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         if (validateInput(name, count)) {
-            _shopItem.value.let {
-                viewModelScope.launch {
-                    val editShopItem = it?.copy(name = name, count = count)
-                    editShopItem?.let { editShopItemUseCase(it) }
-                    finish()
-                }
+            viewModelScope.launch {
+                loading()
+                val oldShopItem = getShopItemUseCase(shopItemId)
+                val editShopItem = oldShopItem.copy(name = name, count = count)
+                editShopItemUseCase(editShopItem)
+                finish()
             }
         }
     }
@@ -81,24 +73,28 @@ class ShopItemViewModel @Inject constructor(
         var isValid = true
         if (name.isBlank()) {
             isValid = false
-            _errorInputName.value = true
+            _state.value = StateShopItemFragment.ErrorInputName(isError = true)
         }
         if (count <= 0) {
             isValid = false
-            _errorInputCount.value = true
+            _state.value = StateShopItemFragment.ErrorInputCount(isError = true)
         }
         return isValid
     }
 
     private fun finish() {
-        _shouldCloseScreen.value = Unit
+        _state.value = StateShopItemFragment.ShouldCloseScreen
     }
 
     fun resetErrorInputName() {
-        _errorInputName.value = false
+        _state.value = StateShopItemFragment.ErrorInputName(isError = false)
     }
 
     fun resetErrorInputCount() {
-        _errorInputCount.value = false
+        _state.value = StateShopItemFragment.ErrorInputCount(isError = false)
+    }
+
+    private fun loading() {
+        _state.value = StateShopItemFragment.Loading
     }
 }

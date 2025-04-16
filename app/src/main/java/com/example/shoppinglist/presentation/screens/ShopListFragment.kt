@@ -14,6 +14,7 @@ import com.example.shoppinglist.databinding.FragmentShopListBinding
 import com.example.shoppinglist.presentation.ShoppingListApp
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter
 import com.example.shoppinglist.presentation.constans.Constants
+import com.example.shoppinglist.presentation.statescreen.StateShopListFragment
 import com.example.shoppinglist.presentation.viewmodels.ShopListViewModel
 import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
@@ -60,8 +61,17 @@ class ShopListFragment : Fragment() {
     }
 
     private fun getShopItemList() {
-        shopListViewModel.shopList.observe(viewLifecycleOwner) {
-            shopListAdapter.submitList(it)
+        shopListViewModel.state.observe(viewLifecycleOwner) {
+            when (it) {
+                StateShopListFragment.Loading -> {
+                    binding.pbLoading.visibility = View.VISIBLE
+                }
+
+                is StateShopListFragment.Result -> {
+                    shopListAdapter.submitList(it.listShopItem)
+                    binding.pbLoading.visibility = View.GONE
+                }
+            }
         }
     }
 

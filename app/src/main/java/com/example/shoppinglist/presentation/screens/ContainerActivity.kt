@@ -19,7 +19,7 @@ TODO:
  7. Add ksp plugin +
  8. Navigation component + safe args +
  9. Unit-tests
- 10. State screen ???
+ 10. State screen +
  11. Кэширование ???
  12. Code style(linter???)
  */

@@ -14,7 +14,7 @@ TODO:
  2. Replace TextWatcher with TextWatcherAdapter() +
  3. Add Settings Activity
  4. LiveData replace Flow
- 5. Add Dependency Injection
+ 5. Add Dependency Injection +
  6. Add Data base +
  7. Add ksp plugin +
  8. Navigation component + safe args +
@@ -38,6 +38,5 @@ class ContainerActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
     }
 }

@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.shoppinglist.R
@@ -18,6 +21,9 @@ import com.example.shoppinglist.presentation.statescreen.StateShopItemFragment
 import com.example.shoppinglist.presentation.viewmodels.ShopItemViewModel
 import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
 import com.google.android.material.internal.TextWatcherAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ShopItemFragment : Fragment() {
@@ -86,40 +92,51 @@ class ShopItemFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        shopItemViewModel.state.observe(viewLifecycleOwner) {
-            binding.pbLoading.visibility = View.GONE
-            when (it) {
-                is StateShopItemFragment.ErrorInputCount -> {
-                    val errorInputCount = if (it.isError) {
-                        getString(R.string.error_input_count)
-                    } else {
-                        null
-                    }
-                    binding.tilCount.error = errorInputCount
-                }
-
-                is StateShopItemFragment.ErrorInputName -> {
-                    val errorInputName = if (it.isError) {
-                        getString(R.string.error_input_name)
-                    } else {
-                        null
-                    }
-                    binding.tilName.error = errorInputName
-                }
-
-                is StateShopItemFragment.Result -> {
-                    binding.etName.setText(it.shopItemEntity.name)
-                    binding.etCount.setText(it.shopItemEntity.count.toString())
-                }
-
-                is StateShopItemFragment.ShouldCloseScreen -> {
-                    findNavController().popBackStack()
-                }
-
-                is StateShopItemFragment.Loading -> {
+        lifecycleScope.launch {
+            shopItemViewModel.state
+                .flowWithLifecycle(lifecycle, Lifecycle.State.RESUMED)
+                .onStart {
                     binding.pbLoading.visibility = View.VISIBLE
                 }
-            }
+                .collectLatest {
+                    binding.pbLoading.visibility = View.GONE
+                    when (it) {
+                        is StateShopItemFragment.ErrorInputCount -> {
+                            val errorInputCount = if (it.isError) {
+                                getString(R.string.error_input_count)
+                            } else {
+                                null
+                            }
+                            binding.tilCount.error = errorInputCount
+                        }
+
+                        is StateShopItemFragment.ErrorInputName -> {
+                            val errorInputName = if (it.isError) {
+                                getString(R.string.error_input_name)
+                            } else {
+                                null
+                            }
+                            binding.tilName.error = errorInputName
+                        }
+
+                        is StateShopItemFragment.Result -> {
+                            binding.etName.setText(it.shopItemEntity.name)
+                            binding.etCount.setText(it.shopItemEntity.count.toString())
+                        }
+
+                        is StateShopItemFragment.ShouldCloseScreen -> {
+                            findNavController().popBackStack()
+                        }
+
+                        is StateShopItemFragment.Loading -> {
+                            binding.pbLoading.visibility = View.VISIBLE
+                        }
+
+                        is StateShopItemFragment.Initial -> {
+                            binding.pbLoading.visibility = View.GONE
+                        }
+                    }
+                }
         }
     }
 

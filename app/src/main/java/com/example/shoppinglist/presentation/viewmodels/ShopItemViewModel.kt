@@ -1,7 +1,5 @@
 package com.example.shoppinglist.presentation.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shoppinglist.domain.entity.ShopItemEntity
@@ -9,6 +7,9 @@ import com.example.shoppinglist.domain.useCases.AddShopItemUseCase
 import com.example.shoppinglist.domain.useCases.EditShopItemUseCase
 import com.example.shoppinglist.domain.useCases.GetShopItemUseCase
 import com.example.shoppinglist.presentation.statescreen.StateShopItemFragment
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,9 +19,10 @@ class ShopItemViewModel @Inject constructor(
     private val editShopItemUseCase: EditShopItemUseCase,
 ) : ViewModel() {
 
-    private val _state = MutableLiveData<StateShopItemFragment>()
-    val state: LiveData<StateShopItemFragment>
-        get() = _state
+    private val _state =
+        MutableStateFlow<StateShopItemFragment>(StateShopItemFragment.Initial)
+    val state: StateFlow<StateShopItemFragment>
+        get() = _state.asStateFlow()
 
 
     fun getShopItem(shopItemId: Int) {
@@ -35,9 +37,9 @@ class ShopItemViewModel @Inject constructor(
         val count = parseCount(inputCount)
         if (validateInput(name, count)) {
             viewModelScope.launch {
-                loading()
                 val shopItem = ShopItemEntity(name = name, count = count, enabled = true)
                 addShopItemUseCase(shopItem)
+                loading()
                 finish()
             }
         }

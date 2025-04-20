@@ -55,7 +55,7 @@ dependencies {
     // Viewmodel scope
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    // LiveData
+    // Lifecycle
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // Navigation

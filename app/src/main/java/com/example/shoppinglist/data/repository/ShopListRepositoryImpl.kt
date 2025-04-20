@@ -1,16 +1,21 @@
 package com.example.shoppinglist.data.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import com.example.shoppinglist.data.database.ShopListDao
 import com.example.shoppinglist.data.mapper.Mapper
 import com.example.shoppinglist.domain.entity.ShopItemEntity
 import com.example.shoppinglist.domain.repository.ShopListRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 class ShopListRepositoryImpl @Inject constructor(
     private val shopListDao: ShopListDao,
-    private val mapper: Mapper
+    private val mapper: Mapper,
+    coroutineScope: CoroutineScope
 ) : ShopListRepository {
 
     override suspend fun getShopItem(shopItemId: Int): ShopItemEntity {
@@ -30,10 +35,17 @@ class ShopListRepositoryImpl @Inject constructor(
         shopListDao.deleteShopItem(shopItemEntity.id)
     }
 
-    override fun getListShopItem(): LiveData<List<ShopItemEntity>> =
-        MediatorLiveData<List<ShopItemEntity>>().apply {
-            addSource(shopListDao.getShopList()) {
-                value = mapper.mapListDbModelToListEntity(it)
+    override val listShopItem: Flow<List<ShopItemEntity>> = flow {
+        shopListDao.getShopList()
+            .map {
+                mapper.mapListDbModelToListEntity(it)
             }
-        }
+            .collect {
+                emit(it)
+            }
+    }.shareIn(
+        scope = coroutineScope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
 }

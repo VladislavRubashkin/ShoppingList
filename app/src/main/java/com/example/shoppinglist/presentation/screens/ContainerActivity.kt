@@ -13,15 +13,16 @@ TODO:
  1. Add animation navigation back ShopItemFragment +
  2. Replace TextWatcher with TextWatcherAdapter() +
  3. Add Settings Activity
- 4. LiveData replace Flow
+ 4. LiveData replace Flow +
  5. Add Dependency Injection +
  6. Add Data base +
  7. Add ksp plugin +
  8. Navigation component + safe args +
  9. Unit-tests
  10. State screen +
- 11. Кэширование ???
+ 11. Кэширование ???(нет)
  12. Code style(linter???)
+ E3D16C - цвет методов
  */
 class ContainerActivity : AppCompatActivity() {
 

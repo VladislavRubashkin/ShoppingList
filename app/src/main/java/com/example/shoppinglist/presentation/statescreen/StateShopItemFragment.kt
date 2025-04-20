@@ -8,4 +8,5 @@ sealed class StateShopItemFragment {
     data class ErrorInputCount(val isError: Boolean) : StateShopItemFragment()
     object ShouldCloseScreen : StateShopItemFragment()
     object Loading : StateShopItemFragment()
+    object Initial : StateShopItemFragment()
 }

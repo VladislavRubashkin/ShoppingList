@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +20,8 @@ import com.example.shoppinglist.presentation.constans.Constants
 import com.example.shoppinglist.presentation.statescreen.StateShopListFragment
 import com.example.shoppinglist.presentation.viewmodels.ShopListViewModel
 import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ShopListFragment : Fragment() {
@@ -61,17 +66,21 @@ class ShopListFragment : Fragment() {
     }
 
     private fun getShopItemList() {
-        shopListViewModel.state.observe(viewLifecycleOwner) {
-            when (it) {
-                StateShopListFragment.Loading -> {
-                    binding.pbLoading.visibility = View.VISIBLE
-                }
+        lifecycleScope.launch {
+            shopListViewModel.state
+                .flowWithLifecycle(lifecycle, Lifecycle.State.RESUMED)
+                .collectLatest {
+                    when (it) {
+                        StateShopListFragment.Loading -> {
+                            binding.pbLoading.visibility = View.VISIBLE
+                        }
 
-                is StateShopListFragment.Result -> {
-                    shopListAdapter.submitList(it.listShopItem)
-                    binding.pbLoading.visibility = View.GONE
+                        is StateShopListFragment.Result -> {
+                            shopListAdapter.submitList(it.listShopItem)
+                            binding.pbLoading.visibility = View.GONE
+                        }
+                    }
                 }
-            }
         }
     }
 

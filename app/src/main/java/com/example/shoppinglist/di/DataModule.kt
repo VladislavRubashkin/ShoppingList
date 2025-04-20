@@ -8,6 +8,8 @@ import com.example.shoppinglist.domain.repository.ShopListRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 @Module
 interface DataModule {
@@ -24,6 +26,12 @@ interface DataModule {
             application: Application
         ): ShopListDao {
             return AppDataBase.newInstance(application).shopListDao()
+        }
+
+        @ApplicationScope
+        @Provides
+        fun provideCoroutineScope(): CoroutineScope {
+            return CoroutineScope(Dispatchers.IO)
         }
     }
 }

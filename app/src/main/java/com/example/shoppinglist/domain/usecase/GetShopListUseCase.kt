@@ -1,4 +1,4 @@
-package com.example.shoppinglist.domain.useCases
+package com.example.shoppinglist.domain.usecase
 
 import com.example.shoppinglist.domain.entity.ShopItemEntity
 import com.example.shoppinglist.domain.repository.ShopListRepository

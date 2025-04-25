@@ -23,6 +23,7 @@ TODO:
  11. Кэширование ???(нет)
  12. Code style(linter???)
  E3D16C - цвет методов
+ 56C1D6 - именованные аргументы
  */
 class ContainerActivity : AppCompatActivity() {
 

@@ -4,13 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shoppinglist.domain.entity.ShopItemEntity
-import com.example.shoppinglist.domain.useCases.DeleteShopItemUseCase
-import com.example.shoppinglist.domain.useCases.EditShopItemUseCase
-import com.example.shoppinglist.domain.useCases.GetShopListUseCase
+import com.example.shoppinglist.domain.usecase.DeleteShopItemUseCase
+import com.example.shoppinglist.domain.usecase.EditShopItemUseCase
+import com.example.shoppinglist.domain.usecase.GetShopListUseCase
 import com.example.shoppinglist.presentation.statescreen.StateShopListFragment
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -43,6 +44,7 @@ class ShopListViewModel @Inject constructor(
                 .onCompletion {
                     Log.d("TAG", "Complete") // Не завершается при сворачивании App
                 }
+                .catch { _state.value = StateShopListFragment.Error }
                 .collectLatest {
                     _state.value = StateShopListFragment.Result(it)
                 }
@@ -53,18 +55,14 @@ class ShopListViewModel @Inject constructor(
         _state.value = StateShopListFragment.Loading
     }
 
-    fun editShopItem(shopItemEntity: ShopItemEntity) {
-        viewModelScope.launch {
-            loading()
-            val newItem = shopItemEntity.copy(enabled = !shopItemEntity.enabled)
-            editShopItemUseCase(newItem)
-        }
+    fun editShopItem(shopItemEntity: ShopItemEntity) = viewModelScope.launch {
+        loading()
+        val newItem = shopItemEntity.copy(enabled = !shopItemEntity.enabled)
+        editShopItemUseCase(newItem)
     }
 
-    fun deleteShopItem(shopItemEntity: ShopItemEntity) {
-        viewModelScope.launch {
-            loading()
-            deleteShopItemUseCase(shopItemEntity)
-        }
+    fun deleteShopItem(shopItemEntity: ShopItemEntity) = viewModelScope.launch {
+        loading()
+        deleteShopItemUseCase(shopItemEntity)
     }
 }

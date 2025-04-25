@@ -3,9 +3,9 @@ package com.example.shoppinglist.presentation.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shoppinglist.domain.entity.ShopItemEntity
-import com.example.shoppinglist.domain.useCases.AddShopItemUseCase
-import com.example.shoppinglist.domain.useCases.EditShopItemUseCase
-import com.example.shoppinglist.domain.useCases.GetShopItemUseCase
+import com.example.shoppinglist.domain.usecase.AddShopItemUseCase
+import com.example.shoppinglist.domain.usecase.EditShopItemUseCase
+import com.example.shoppinglist.domain.usecase.GetShopItemUseCase
 import com.example.shoppinglist.presentation.statescreen.StateShopItemFragment
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

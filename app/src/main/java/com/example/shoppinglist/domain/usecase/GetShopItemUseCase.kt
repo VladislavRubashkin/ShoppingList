@@ -1,4 +1,4 @@
-package com.example.shoppinglist.domain.useCases
+package com.example.shoppinglist.domain.usecase
 
 import com.example.shoppinglist.domain.entity.ShopItemEntity
 import com.example.shoppinglist.domain.repository.ShopListRepository
@@ -9,6 +9,7 @@ class GetShopItemUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(shopItemId: Int): ShopItemEntity {
+        if (shopItemId < 0) throw IllegalArgumentException()
         return repository.getShopItem(shopItemId)
     }
 }

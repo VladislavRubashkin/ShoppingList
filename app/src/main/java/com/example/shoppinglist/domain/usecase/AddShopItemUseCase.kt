@@ -1,14 +1,15 @@
-package com.example.shoppinglist.domain.useCases
+package com.example.shoppinglist.domain.usecase
 
 import com.example.shoppinglist.domain.entity.ShopItemEntity
 import com.example.shoppinglist.domain.repository.ShopListRepository
 import javax.inject.Inject
 
-class DeleteShopItemUseCase @Inject constructor(
+class AddShopItemUseCase @Inject constructor(
     private val repository: ShopListRepository
 ) {
 
     suspend operator fun invoke(shopItem: ShopItemEntity) {
-        repository.deleteShopItem(shopItem)
+        if (shopItem.id < 0) throw IllegalArgumentException()
+        repository.addShopItem(shopItem)
     }
 }

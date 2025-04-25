@@ -36,6 +36,13 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
+
 }
 
 dependencies {
@@ -74,4 +81,14 @@ dependencies {
     // Dagger
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
+
+    // Mockk
+    testImplementation(libs.mockk)
+
+    // Junit5
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+
+    // Coroutines test
+    testImplementation (libs.kotlinx.coroutines.test)
 }

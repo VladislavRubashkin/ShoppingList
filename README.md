@@ -48,13 +48,13 @@ com/
         │   ├── model/
         │   └── use_case/  
         ├── data/          # Data layer
-        │   ├── database/     # Room entities
-        |   ├── mapper/
+        │   ├── database/  # Room entities
+        │   ├── mapper/    # Data mapping
         │   └── repository/
         └── presentation/  # UI layer
-            ├── screen/
-            ├── adapter/
-            └── viewmodel/
+            ├── screen/    # Activities/Fragments
+            ├── adapter/   # RecyclerView adapters
+            └── viewmodel/ # ViewModels
 
 🧪 Testing Strategy
 

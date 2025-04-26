@@ -37,32 +37,3 @@ Modern Android shopping list application built with cutting-edge technologies to
 ```bash
 git clone https://github.com/VladislavRubashkin/ShoppingList.git
 cd ShoppingList
-
-🏗 Project Structure
-
-com/
-└── vladislavrubashkin/
-    └── shoppinglist/
-        ├── di/           # Dependency Injection
-        ├── domain/        # Business logic
-        │   ├── model/
-        │   └── use_case/  
-        ├── data/          # Data layer
-        │   ├── database/  # Room entities
-        │   ├── mapper/    # Data mapping
-        │   └── repository/
-        └── presentation/  # UI layer
-            ├── screen/    # Activities/Fragments
-            ├── adapter/   # RecyclerView adapters
-            └── viewmodel/ # ViewModels
-
-🧪 Testing Strategy
-
-Test Type	  Coverage
-Unit Tests	ViewModels, UseCases, Repository
-
-📬 Contact
-
-Vladislav Rubashkin - RubashkinVlad@yandex.ru
-
-Project Link: https://github.com/VladislavRubashkin/ShoppingList

@@ -25,11 +25,9 @@ class ShopItemViewModel @Inject constructor(
         get() = _state.asStateFlow()
 
 
-    fun getShopItem(shopItemId: Int) {
-        viewModelScope.launch {
-            loading()
-            _state.value = StateShopItemFragment.Result(getShopItemUseCase(shopItemId = shopItemId))
-        }
+    fun getShopItem(shopItemId: Int) = viewModelScope.launch {
+        loading()
+        _state.value = StateShopItemFragment.Result(getShopItemUseCase(shopItemId = shopItemId))
     }
 
     fun addShopItem(inputName: String?, inputCount: String?) {

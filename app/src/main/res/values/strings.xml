@@ -9,5 +9,7 @@
     <string name="button_save">Save</string>
     <string name="error_input_count">Error input count</string>
     <string name="error_input_name">Error input name</string>
+    <string name="error">Error name</string>
+
 
 </resources>

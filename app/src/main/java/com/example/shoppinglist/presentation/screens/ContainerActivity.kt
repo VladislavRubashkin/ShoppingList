@@ -8,23 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.ActivityContainerBinding
 
-/*
-TODO:
- 1. Add animation navigation back ShopItemFragment +
- 2. Replace TextWatcher with TextWatcherAdapter() +
- 3. Add Settings Activity
- 4. LiveData replace Flow +
- 5. Add Dependency Injection +
- 6. Add Data base +
- 7. Add ksp plugin +
- 8. Navigation component + safe args +
- 9. Unit-tests
- 10. State screen +
- 11. Кэширование ???(нет)
- 12. Code style(linter???)
- E3D16C - цвет методов
- 56C1D6 - именованные аргументы
- */
+
 class ContainerActivity : AppCompatActivity() {
 
     private val binding: ActivityContainerBinding by lazy {

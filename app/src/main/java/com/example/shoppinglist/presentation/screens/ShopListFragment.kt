@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.FragmentShopListBinding
 import com.example.shoppinglist.presentation.ShoppingListApp
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter
@@ -62,11 +63,11 @@ class ShopListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initRecyclerView()
-        getShopItemList()
+        observeViewModel()
         addShopItem()
     }
 
-    private fun getShopItemList() {
+    private fun observeViewModel() {
         lifecycleScope.launch {
             shopListViewModel.state
                 .flowWithLifecycle(lifecycle, Lifecycle.State.RESUMED)
@@ -82,7 +83,11 @@ class ShopListFragment : Fragment() {
                         }
 
                         is StateShopListFragment.Error -> {
-                            Toast.makeText(requireActivity(), "Error", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                requireActivity(),
+                                getString(R.string.error),
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
                 }

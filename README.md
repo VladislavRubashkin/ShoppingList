@@ -19,7 +19,7 @@ Modern Android shopping list application built with cutting-edge technologies to
 | Category          | Technologies                                                                |
 |-------------------|-----------------------------------------------------------------------------|
 | Language          | Kotlin                                                                      |
-| Architecture      | MVVM, Repository Pattern                                                    |
+| Architecture      | MVVM, Clean architecture                                                  |
 | DI                | Dagger2                                                                     |
 | Async             | Coroutines + Flow                                                           |
 | Persistence       | Room Database                                                               |
